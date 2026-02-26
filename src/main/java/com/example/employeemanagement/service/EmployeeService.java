@@ -1,6 +1,8 @@
 package com.example.employeemanagement.service;
 
 import com.example.employeemanagement.model.Employee;
+import com.example.employeemanagement.repository.EmployeeRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,27 +12,25 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service    // marks class a service/business logic layer, manages it as a bean
+@RequiredArgsConstructor
 public class EmployeeService {
-    private final Map<Long, Employee> employeeMap= new HashMap<>();
-    private final AtomicLong idCounter = new AtomicLong();
+
+    private final EmployeeRepository employeeRepository;
 
     public Employee createEmployee(Employee employee){
-        Long id = idCounter.getAndIncrement();
-        employee.setId(id);
-        employeeMap.put(id,employee);
-        return employee;
+        return employeeRepository.save(employee);
     }
 
     public List<Employee> getAllEmployees(){
-        return new ArrayList<>(employeeMap.values());
+        return employeeRepository.findAll();
     }
 
     public Employee getEmployeeById(Long id){
-        return employeeMap.get(id);
+        return employeeRepository.findById(id).orElse(null);
     }
 
     public Employee updateEmployee(Long id,Employee updatedEmploye){
-        Employee existing = employeeMap.get(id);
+        Employee existing = employeeRepository.findById(id).orElse(null);
         if(existing == null){
             return null;
         }
@@ -38,10 +38,10 @@ public class EmployeeService {
         existing.setEmail(updatedEmploye.getEmail());
         existing.setDepartment(updatedEmploye.getDepartment());
         existing.setSalary(updatedEmploye.getSalary());
-        return existing;
+        return employeeRepository.save(existing);
     }
 
-    public boolean deleteEmployee(Long id){
-        return employeeMap.remove(id) != null;
+    public void deleteEmployee(Long id){
+        employeeRepository.deleteById(id);
     }
 }
