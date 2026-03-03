@@ -1,0 +1,64 @@
+2. Custom Queries
+Right now you can only get all employees or employee by ID. Custom queries let you search and filter —
+ like "find all engineers" or "find employees earning more than 70k".
+        JPQL is like SQL but uses class names instead of table names.
+
+3. DTO Layer (Data Transfer Object)
+Right now your API directly exposes your Employee entity to the outside world. This is bad in real applications. Let me explain why:
+
+The Problem:
+Imagine your Employee entity has sensitive fields like:
+password;
+private String ssn;          // Social Security Number
+private String bankAccount;
+
+    **The Solution — DTO:**
+    - **Request DTO** → Controls what data the **client can send IN**
+    - **Response DTO** → Controls what data the **client gets OUT**
+    - Your entity stays **safe and hidden** inside your backend
+
+    Architecture
+    Client → RequestDTO → Service → Entity → Database
+    Database → Entity → Service → ResponseDTO → Client
+
+
+#4 — Global Exception Handler?
+Right now if something goes wrong, Spring returns ugly error responses,
+        After implementing Global Exception Handler, you'll get clean, meaningful responses
+        How it works:
+        Request comes in → Something goes wrong → Exception is thrown →
+        Global Handler catches it → Returns clean error response
+
+     Instead of handling errors in every single method, we create ONE central place that handles all errors for the entire application!
+
+5. Swagger (API Documentation)
+Right now the only way to know what your API does is to read the code.
+Swagger automatically generates a beautiful interactive UI where anyone can see and test all your endpoints without Postman!
+
+Two ways to run your app:
+Option 1 — Local Development (IntelliJ)
+✅ Run from IntelliJ
+❌ Docker app container OFF
+✅ Docker postgres container ON (you still need DB)
+
+Option 2 — Docker (Production like)
+❌ Don't run from IntelliJ
+✅ docker-compose up
+✅ Everything runs in Docker
+
+6. Dockerizing Spring Boot
+Right now your app only runs on your machine because PostgreSQL is installed locally.
+Docker packages your entire app into a container that runs anywhere — any computer, any server, any cloud!
+
+7. JWT Security 🔐
+Right now anyone can access your API — no login, no authentication. JWT Security adds:
+
+        User Registration & Login
+        Password encryption
+        JWT Token generation
+        Protected endpoints — only logged in users can access
+
+How JWT works:
+        1. User registers → password gets encrypted → saved to DB
+        2. User logs in → server verifies password → generates JWT token
+        3. User sends token with every request → server validates token → allows access

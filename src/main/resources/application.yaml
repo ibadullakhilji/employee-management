@@ -1,10 +1,15 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5438/employee_db
-    username: admin
-    password: admin
-
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5438/employee_db?TimeZone=Asia/Kolkata}
+    username: ${SPRING_DATASOURCE_USERNAME:admin}
+    password: ${SPRING_DATASOURCE_PASSWORD:admin}
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+  secret: employeeManagementSecretKeyForJWTTokenGeneration2024
+  expiration: 86400000
